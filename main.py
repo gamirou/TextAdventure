@@ -19,7 +19,7 @@ def findPos():
         for v in range(GRID_COLS):
              if grid[u][v] == '1':
                 return {'x': v, 'y': u}
-            
+
 
 def printGrid(grid):
     str_grid = ''
@@ -42,12 +42,12 @@ def updateGrid(new):
 
 def updateStats(properties):
     global PLAYER_STATS
-    
+
     ## UPDATING CSV FILE
     PLAYER_FILE = open('player_stats.csv', 'w')
-    
+
     with PLAYER_FILE:
-        writer = csv.DictWriter(PLAYER_FILE, fieldnames=PLAYER_STATS)    
+        writer = csv.DictWriter(PLAYER_FILE, fieldnames=PLAYER_STATS)
         writer.writeheader()
         writer.writerow(properties)
 
@@ -59,7 +59,7 @@ Your inventory:
     Other Items :(coming soon)
 """.format(player.properties['keys'], player.properties['score']))
 
-    
+
 ## FUNCTIONS
 
 ## CLASSES
@@ -81,7 +81,7 @@ class Player:
 
     def __init__(self):
         global PLAYER_STATS
-        
+
         self.pos = None
         self.finished = False
 
@@ -91,25 +91,25 @@ class Player:
         with open('player_stats.csv', 'r') as line:
             reader = csv.reader(line)
             rowNum = 0
-            
+
             for row in reader:
                 if rowNum == 0:
                     PLAYER_STATS = list(row)
                 else:
-                    
-                    colNum = 0 
+
+                    colNum = 0
                     for stat in row:
                         if not row[colNum]:
                             continue
                         self.properties[PLAYER_STATS[colNum]] = int(stat)
-                        
+
                         colNum += 1
 
                 rowNum += 1
-        
+
 
     def move(self, movement):
-        
+
         v = self.pos['x']
         u = self.pos['y']
 
@@ -118,7 +118,7 @@ class Player:
         if neighbour:
             if neighbour.symbol not in ('-', '+', '|'):
                 if neighbour.symbol != 'D':
-                    
+
                     if neighbour.symbol == 'C':
                         self.properties["score"] += 100
                         print("You got a coin! That means you are really close to the treasure! Go and find it!!")
@@ -134,6 +134,7 @@ class Player:
                         self.properties["score"] += 1000
                         print("'OMG! You found the Acropolis Key. It doesn't unlock any modern door, but it is worth a lot! I will sell it' says 1")
 
+
                     grid[u][v] = ' '
                     grid[neighbour.u][neighbour.v] = '1'
 
@@ -141,12 +142,12 @@ class Player:
                     cells[u][v].symbol = ' '
 
                     updateGrid(grid)
-                
+
                     self.pos = {'x': neighbour.v, 'y': neighbour.u}
                     self.properties["moves"] += 1
-                    
+
                     updateStats(self.properties)
-                    
+
                 else: ## IF NEIGHBOUR == D
                     if neighbour.isOpen or self.properties["keys"] > 0:
                         if self.properties["keys"] > 0 and not neighbour.isOpen:
@@ -154,14 +155,14 @@ class Player:
                             ALL_DOORS[int(self.properties['currLevel'])-1][neighbour.index] = True
 
                             open("doors.csv", "w").close()
-                            
+
                             doorsFile = open("doors.csv", "w")
-                            
+
                             with doorsFile:
-                                writer = csv.writer(doorsFile)    
+                                writer = csv.writer(doorsFile)
                                 writer.writerows(ALL_DOORS)
-                            
-                                
+
+
                             self.properties["keys"] -= 1
 
                         grid[u][v] = ' '
@@ -171,15 +172,15 @@ class Player:
                         cells[u][v].symbol = ' '
 
                         updateGrid(grid)
-                
+
                         self.pos = {'x': neighbour.v, 'y': neighbour.u}
                         self.properties["moves"] += 1
-                    
+
                         updateStats(self.properties)
 
                     else:
                         print("Oops, you need a key, go and grab one!")
-                
+
 
 
             else: ## IF NEIGHBOUR != W
@@ -187,30 +188,30 @@ class Player:
 
         else: ## IF NEIGHBOUR
             print("OOps, you hit the map's edges")
-            
+
     def getNeighbour(self, movement, u, v):
         if movement == 'w':
             if u == 0:
                 return None
-            
+
             return cells[u-1][v]
-                   
+
         elif movement == 'a':
             if v == 0:
                 return None
-            
+
             return cells[u][v-1]
 
         elif movement == 's':
             if u == GRID_ROWS - 1:
                 return None
-            
+
             return cells[u+1][v]
-        
+
         else:
             if v == GRID_COLS - 1:
                 return None
-            
+
             return cells[u][v+1]
 
 ## CLASSES
@@ -255,7 +256,7 @@ with open('levels.csv', 'r') as line:
                 LEVELS[lvl_header[y_index]].append(val)
                 if x_index == int(CURR_LEVEL['level']):
                     CURR_LEVEL[lvl_header[y_index]] = val
-                    
+
                 y_index += 1
 
             y_index = 0
@@ -317,7 +318,7 @@ def updateLevelMap():
             if isinstance(cell, Door):
                 doors.append(cell)
                 doorIndex += 1
-            
+
             cells[u].append(cell)
 
     player.pos = findPos()
@@ -342,12 +343,12 @@ with open('doors.csv', 'r') as line:
 
             if y_index == int(CURR_LEVEL['level']) - 1:
                 doors[x_index].isOpen = doorVal
-                
+
             ALL_DOORS[y_index].append(doorVal)
-            
+
             x_index += 1
 
-        
+
         y_index += 1
         x_index = 0
 
@@ -355,7 +356,7 @@ while True:
     printGrid(grid)
     printInventory(player)
     movement = input("Enter W for up, A for left, S for down, D for right!").lower()
-    
+
     if movement in ('w', 'a', 's', 'd'):
         player.move(movement)
 
@@ -376,7 +377,7 @@ while True:
 
             player.properties['score'] -= int(CURR_LEVEL['transport'])
             player.finished = False
-            
+
             print("WOW, well done, you finished level" + CURR_LEVEL['level'])
 
             for key in CURR_LEVEL:
@@ -398,5 +399,3 @@ while True:
         break
     else:
         print("Enter a valid input like W,A,S,D or quit")
-
-
