@@ -338,11 +338,10 @@ with open('doors.csv', 'r') as line:
         for val in row:
             if val == 'FALSE':
                 doorVal = False
-            else:
+            elif val == 'TRUE':
                 doorVal = True
-
-            if y_index == int(CURR_LEVEL['level']) - 1:
-                doors[x_index].isOpen = doorVal
+            else:
+                continue
 
             ALL_DOORS[y_index].append(doorVal)
 
@@ -351,6 +350,12 @@ with open('doors.csv', 'r') as line:
 
         y_index += 1
         x_index = 0
+
+print(len(ALL_DOORS[int(CURR_LEVEL['level']) - 1]))
+## Store current doors for this level
+for item in range(len(ALL_DOORS[int(CURR_LEVEL['level']) - 1])):
+    print(item)
+    doors[item].isOpen = ALL_DOORS[int(CURR_LEVEL['level']) - 1][item]
 
 while True:
     printGrid(grid)
