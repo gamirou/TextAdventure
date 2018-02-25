@@ -133,6 +133,8 @@ class Player:
                     elif neighbour.symbol == 'A':
                         self.properties["score"] += 1000
                         print("'OMG! You found the Acropolis Key. It doesn't unlock any modern door, but it is worth a lot! I will sell it' says 1")
+                    elif neighbour.symbol == '#':
+                        print('Deleting trail')
 
 
                     grid[u][v] = ' '
@@ -351,10 +353,8 @@ with open('doors.csv', 'r') as line:
         y_index += 1
         x_index = 0
 
-print(len(ALL_DOORS[int(CURR_LEVEL['level']) - 1]))
 ## Store current doors for this level
 for item in range(len(ALL_DOORS[int(CURR_LEVEL['level']) - 1])):
-    print(item)
     doors[item].isOpen = ALL_DOORS[int(CURR_LEVEL['level']) - 1][item]
 
 while True:
