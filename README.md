@@ -1,5 +1,6 @@
 # __TextAdventure__
 ### A text-based Maze Adventure game
+It is a rather boring game, as it is text-based, but I will make a pygame version of it.
 
 # Not finished
 #### So, if you want to help me design new levels, clone this repo into your computer
@@ -14,9 +15,7 @@
 * Height of each cell (2..N): _2_
 * Random Number Seed (optional): _NONE_
 
-It is a rather boring game, as it is text-based, but I will make a pygame version of it.
-
-What to do:
+## What to do:
 - [ ] add 10 levels
 - [ ] add more special items
 
