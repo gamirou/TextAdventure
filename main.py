@@ -7,6 +7,7 @@
 	T: Treasure (you get 500pt)
 	E: Exit, finished level
 	A: Acropolis Treasure (1000pt)
+
 Coordinates: u - going across, v - going down
 """
 import csv
@@ -270,6 +271,7 @@ if player.properties['moves'] == 0:
     in his trip around the world. With your help, 1 will stop in 10 cities across the world, London, Athens, Giza, Dubai,
     New Delhi, Hiroshima, Los Angeles, New York, Reykjavik and Dublin. You will need to guide him across the famous
     places he goes so he can complete his ultimate quest, to go around the world.
+
     Instructions:
     You will see across the map different symbols. +, - and | represent the map's walls and borders. C and T represent money
     and you will need them to buy the transport methods needed to go to the next level. K and D are the keys and doors. It seems
@@ -283,6 +285,7 @@ else:
 
 print("""Level {2}
 Location: {0} - {1}
+
 {3}
 """.format(CURR_LEVEL['city'], CURR_LEVEL['location'], CURR_LEVEL['level'], CURR_LEVEL['story']))
 
@@ -381,6 +384,7 @@ while True:
 
             print("""Level {2}
             Location: {0} - {1}
+
             {3}
             """.format(CURR_LEVEL['city'], CURR_LEVEL['location'], CURR_LEVEL['level'], CURR_LEVEL['story']))
 
