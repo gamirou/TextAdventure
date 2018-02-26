@@ -7,7 +7,6 @@
 	T: Treasure (you get 500pt)
 	E: Exit, finished level
 	A: Acropolis Treasure (1000pt)
-
 Coordinates: u - going across, v - going down
 """
 import csv
@@ -33,9 +32,9 @@ def printGrid(grid):
 
 def updateGrid(new):
     ## CLEARS THE OLD MAP
-    open('level'+ str(player.properties["currLevel"]) +'.txt', 'w').close()
+    open('levels/level'+ str(player.properties["currLevel"]) +'.txt', 'w').close()
 
-    with open('level'+ str(player.properties["currLevel"]) +'.txt', 'a') as line:
+    with open('levels/level'+ str(player.properties["currLevel"]) +'.txt', 'a') as line:
         for i in range(GRID_ROWS):
             newLine = ''.join(new[i]) + '\n'
             line.write(newLine)
@@ -44,7 +43,7 @@ def updateStats(properties):
     global PLAYER_STATS
 
     ## UPDATING CSV FILE
-    PLAYER_FILE = open('player_stats.csv', 'w')
+    PLAYER_FILE = open('databases/player_stats.csv', 'w')
 
     with PLAYER_FILE:
         writer = csv.DictWriter(PLAYER_FILE, fieldnames=PLAYER_STATS)
@@ -88,7 +87,7 @@ class Player:
         self.properties = {}
 
         ## ASSIGNING CSV FILE DATA TO PROPERTIES DICTIONARY
-        with open('player_stats.csv', 'r') as line:
+        with open('databases/player_stats.csv', 'r') as line:
             reader = csv.reader(line)
             rowNum = 0
 
@@ -133,9 +132,6 @@ class Player:
                     elif neighbour.symbol == 'A':
                         self.properties["score"] += 1000
                         print("'OMG! You found the Acropolis Key. It doesn't unlock any modern door, but it is worth a lot! I will sell it' says 1")
-                    elif neighbour.symbol == '#':
-                        print('Deleting trail')
-
 
                     grid[u][v] = ' '
                     grid[neighbour.u][neighbour.v] = '1'
@@ -156,9 +152,9 @@ class Player:
                             neighbour.isOpen = True
                             ALL_DOORS[int(self.properties['currLevel'])-1][neighbour.index] = True
 
-                            open("doors.csv", "w").close()
+                            open("databases/doors.csv", "w").close()
 
-                            doorsFile = open("doors.csv", "w")
+                            doorsFile = open("databases/doors.csv", "w")
 
                             with doorsFile:
                                 writer = csv.writer(doorsFile)
@@ -246,7 +242,7 @@ CURR_LEVEL = {
 }
 
 ## Storing all levels so I won't have to keep doing it
-with open('levels.csv', 'r') as line:
+with open('databases/levels.csv', 'r') as line:
     reader = csv.reader(line)
     x_index = 0
     y_index = 0
@@ -274,7 +270,6 @@ if player.properties['moves'] == 0:
     in his trip around the world. With your help, 1 will stop in 10 cities across the world, London, Athens, Giza, Dubai,
     New Delhi, Hiroshima, Los Angeles, New York, Reykjavik and Dublin. You will need to guide him across the famous
     places he goes so he can complete his ultimate quest, to go around the world.
-
     Instructions:
     You will see across the map different symbols. +, - and | represent the map's walls and borders. C and T represent money
     and you will need them to buy the transport methods needed to go to the next level. K and D are the keys and doors. It seems
@@ -288,7 +283,6 @@ else:
 
 print("""Level {2}
 Location: {0} - {1}
-
 {3}
 """.format(CURR_LEVEL['city'], CURR_LEVEL['location'], CURR_LEVEL['level'], CURR_LEVEL['story']))
 
@@ -300,7 +294,7 @@ def updateLevelMap():
     global GRID_ROWS
     global GRID_COLS
 
-    mapFile = open('level' + str(player.properties['currLevel']) +'.txt', 'r')
+    mapFile = open('levels/level' + str(player.properties['currLevel']) +'.txt', 'r')
     rows = mapFile.readlines()
     GRID_ROWS = len(rows)
     GRID_COLS = len(rows[0]) - 1
@@ -331,7 +325,7 @@ def updateLevelMap():
 updateLevelMap()
 
 ## Storing all doors so I won't have to keep doing it
-with open('doors.csv', 'r') as line:
+with open('databases/doors.csv', 'r') as line:
     reader = csv.reader(line)
     y_index = 0
     x_index = 0
@@ -340,10 +334,11 @@ with open('doors.csv', 'r') as line:
         for val in row:
             if val == 'FALSE':
                 doorVal = False
-            elif val == 'TRUE':
-                doorVal = True
             else:
-                continue
+                doorVal = True
+
+            if y_index == int(CURR_LEVEL['level']) - 1:
+                doors[x_index].isOpen = doorVal
 
             ALL_DOORS[y_index].append(doorVal)
 
@@ -352,10 +347,6 @@ with open('doors.csv', 'r') as line:
 
         y_index += 1
         x_index = 0
-
-## Store current doors for this level
-for item in range(len(ALL_DOORS[int(CURR_LEVEL['level']) - 1])):
-    doors[item].isOpen = ALL_DOORS[int(CURR_LEVEL['level']) - 1][item]
 
 while True:
     printGrid(grid)
@@ -390,7 +381,6 @@ while True:
 
             print("""Level {2}
             Location: {0} - {1}
-
             {3}
             """.format(CURR_LEVEL['city'], CURR_LEVEL['location'], CURR_LEVEL['level'], CURR_LEVEL['story']))
 
